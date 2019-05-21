@@ -15,19 +15,18 @@ class Home extends Component {
   }
 
   handlePageChange = page => {
-    this.setState({ currentPage: page });
+    this.setState({ id: page, currentPage: page });
     this.props.history.push("/" + page);
-    //console.log("pagination clicked ", page);
+
+    console.log("pagination clicked ", page);
   };
 
-  componentDidMount() {
-    const id = this.props.match.params.page;
-    if (id) {
-      this.setState({ id });
-    }
+  fetchData = () => {
+    //const _id = Number(this.props.match.params.page);
+    console.log("id: ", this.state.currentPage);
     const options = {
-      page: id,
-      itemsPerPage: 20
+      page: this.state.currentPage,
+      itemsPerPage: 100
     };
 
     fetch("http://nyx.vima.ekt.gr:3000/api/books", {
@@ -46,15 +45,24 @@ class Home extends Component {
         this.setState({ books: data.books });
       })
       .catch(err => console.log(err));
+  };
+
+  componentDidMount() {
+    const id = Number(this.props.match.params.page);
+    if (id) {
+      this.setState({ id, currentPage: id });
+    }
+    this.fetchData();
   }
   render() {
     const { pageSize, currentPage, books } = this.state;
     const booksArr = paginate(books, currentPage, pageSize);
+
     return (
       <React.Fragment>
         <Table data={booksArr} />
         <Pagination
-          itemsCount={this.state.books.length}
+          itemsCount={books.length}
           pageSize={pageSize}
           currentPage={currentPage}
           onPageChange={this.handlePageChange}
