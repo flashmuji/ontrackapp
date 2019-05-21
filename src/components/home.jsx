@@ -17,13 +17,9 @@ class Home extends Component {
   handlePageChange = page => {
     this.setState({ id: page, currentPage: page });
     this.props.history.push("/" + page);
-
-    console.log("pagination clicked ", page);
   };
 
   fetchData = () => {
-    //const _id = Number(this.props.match.params.page);
-    console.log("id: ", this.state.currentPage);
     const options = {
       page: this.state.currentPage,
       itemsPerPage: 100
@@ -41,7 +37,7 @@ class Home extends Component {
         return response.json();
       })
       .then(data => {
-        console.log(data);
+        //console.log(data);
         this.setState({ books: data.books });
       })
       .catch(err => console.log(err));
